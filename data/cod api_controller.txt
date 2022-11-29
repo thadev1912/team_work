@@ -1,0 +1,115 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\Post;
+use DB;
+class PostController extends Controller
+{
+   public function index()
+     {
+        
+        // $data=DB::table('post')
+        // ->where('id','4')
+        // ->first(); 
+        $data=Post::all();      
+        //cách return đúng kiểu json:
+        if($data)
+        {
+                return response()->json([
+                'data'=>$data,
+                 'status'=>200,
+                 'messege'=>'thành công',
+                ]);
+                }
+        else
+        {
+                return response()->json([
+                 'data'=>null,   
+                 'stats'=>404,
+                 'messege'=>'kết nối lỗi rồi đó',
+                ]);
+        }
+     }
+     public function store(Request $request)
+      {
+         $data=Post::create([
+            'ma_post'=>$request->ma_post,
+            'title_post'=>$request->title_post,
+            'content_post'=>$request->content_post,
+            'danhmuc_post'=>$request->danhmuc_post,
+          ]);
+          if($data)
+          {
+              return response()->json([
+              'data'=>$data,
+              'status'=>200,
+              'messege'=>'Thêm thành công!!!',
+              ]);
+          }
+          else
+         {
+            return response()->json([
+                'data'=>$data,
+                'status'=>200,
+                'messege'=>'Vui lòng kiểm tra lại!!!',
+                ]);
+         }
+
+      }
+      public function update(Request $request,$id)
+       {
+        $data=Post::find($id)->update([
+            'ma_post'=>$request->ma_post,
+            'title_post'=>$request->title_post,
+            'content_post'=>$request->content_post,
+            'danhmuc_post'=>$request->danhmuc_post,
+          ]);
+          if($data)
+          {
+              return response()->json([
+              'data'=>$data,
+              'status'=>200,
+              'messege'=>'Cập nhật thành công!!!',
+              ]);
+          }
+          else
+         {
+            return response()->json([
+                'data'=>$data,
+                'status'=>200,
+                'messege'=>'Vui lòng kiểm tra lại!!!',
+                ]);
+         }
+       }
+       public function destroy($id)
+        {
+           $data=Post::find($id)->delete();
+           if($data)
+              {
+                return response()->json([
+                    'data'=>$data,
+                    'status'=>200,
+                    'messege'=>'Đã xóa thành công!!!',
+                ]);
+              }
+            else
+            {
+                return response()->json([
+                    'data'=>$data,
+                    'status'=>200,
+                    'messege'=>'Vui lòng kiểm tra lại!!!',
+                ]);
+            }
+        }
+}
+
+////////////////////
+class Connect_APIController extends Controller
+{
+    public function connect()
+     {
+        return view('api.show_ajax');
+     }
+}
