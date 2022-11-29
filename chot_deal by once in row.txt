@@ -1,0 +1,68 @@
+public function chotdeal(Request $request)
+     {
+        //dd(($request->cash=='checked'));
+        $user=Auth::user()->name;
+        if(Auth::check())
+        {           
+              if($request->thanhtoan=='cash')
+                    {  
+                    //    $dh=new donhang;
+                    //    $dh->ma_kh=$user;
+                    //    $dh->hoten=$request->txt_hoten;
+                    //    $dh->diachi=$request->txt_diachi;
+                    //    $dh->sdt=$request->txt_sdt;
+                    //    $cart=$request->session()->get('cart');
+                    //    //dd($cart);
+                    //    $total=0;
+                    //    $qty=0;
+                    $cart=$request->session()->get('cart');
+                    //dd($cart);
+                         foreach($cart as $item)
+                            { 
+                                $sl=$item['quantity'];                                
+                                $i=0;
+                                while($i<$sl)
+                                    {
+                                          $gh=new demo;
+                                          $gh->ma_user=$user; 
+                                         // $item['product']->id;                                                  
+                                          $gh->ten_sp=$item['product']->name;
+                                          $gh->gia=$item['product']->price;
+                                          $gh->sl=1;                                                                           
+                                          $gh->save();
+                                          giohang::where('ma_sp',$item['product']->id)
+                                          ->where('ma_user',$user)
+                                          ->delete();
+                                          $i++;
+                                    }  
+                                   
+                                // $total=$total+$item['product']->price*$item['quantity']; 
+                                // $qty =$qty+$item['quantity'];
+                                // $dh->ten_sp=$item['product']->name;
+                                // $dh->dongia_sp=$total;
+                                // $dh->soluong_sp=$qty;
+                                // $dh->tonggia_sp=0;
+                                // $dh->save(); 
+                            }
+
+                       
+                        //$dh->dongia_sp=$total;
+                        //$dh->soluong_sp=$qty;
+                       //$dh->tonggia_sp=$total-(540000);
+                       
+                       // giohang::where('ma_user',$user)->delete();
+                        
+                         
+                       // $request->session()->forget('cart');  hàm dùng cho unset session               
+                        return redirect()->route('shop');
+                    }
+              else
+                    {
+                          echo "vui lòng chọn lại!!";
+                    }         
+        }
+        else
+        {
+            echo "vui lòng đăng nhập";
+        }
+    }

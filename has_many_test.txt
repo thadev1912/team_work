@@ -1,0 +1,28 @@
+public function nhanvien()
+      {
+        return $this->hasMany(nhanvien::class,'ma_pb','ma_pb');
+      }
+
+
+public function nhanvien_phongban()
+               {
+                 $data=Phongban::all();
+                 foreach($data as $dt)
+                 {
+                   
+                   echo $dt->ten_pb; 
+                   echo "<br>";
+                  foreach($dt->nhanvien as $info)
+                  {
+                    echo $info->ma_nv; 
+                    echo "<br>";   
+                    echo $info->hoten_nv;
+                         echo "<br>";
+                  }
+                     //dd($result);
+                       echo "<br>";
+                       echo "<hr>";
+                //   $thongke=PhongBan::find(9)->nhanvien;
+                //   dd($thongke);
+                 }  
+               }
