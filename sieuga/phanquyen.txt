@@ -1,0 +1,54 @@
+--model User
+
+public function hasPermission($route)
+    {
+        
+       // dd($route);
+        $routes=$this->routes();       
+        return in_array($route,$routes) ? true:false;
+        
+      
+    }
+    // các route đã được gán cho người dùng này
+    public function routes()
+    {
+    return ['nhanvien','phongban','timkiem'];
+    }
+}
+
+//////////////////////////////////
+ midle ware
+ public function handle($request, Closure $next, ...$guards)
+    {
+       if(!Auth::check())
+       {
+        return redirect()->route('dangnhap')->with('thongbao','Bạn không có quyền truy cập vào trang này');
+       }
+       $user=Auth::user()->name;     
+       $route=$request->route()->getName();
+      // dd($route);
+       dd(Auth::user()->can($route));
+      //
+
+        return $next($request);
+    }
+
+/////////////
+provider
+
+ public function boot()
+    {
+        $this->registerPolicies();
+       app(Gate::class)->before(function(Authorizable $auth,$route)
+       {
+        if(method_exists($auth,'hasPermission'))
+        {
+            return $auth->hasPermission($route) ? $auth->hasPermission($route) :false;
+        } 
+        return false;
+       }
+       
+    );
+
+        //mục đích code trên là để chạy trước hàm can() của authorize để cho phép hay không-->từ đó middlewate tiếp tục xử lý...
+    }
